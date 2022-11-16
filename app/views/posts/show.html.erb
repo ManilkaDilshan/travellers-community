@@ -1,0 +1,65 @@
+<div class="post-show row">
+  <div class="col-md-8">
+    <%=image_tag @post.image, class: 'image' %>
+  </div>
+  <div class="col-md-4">
+    <div class="user">
+      <div class="avatar">
+        <% if @post.user.avatar.attached? %>
+          <%= link_to user_path(@post.user) do %>
+            <%= image_tag @post.user.avatar %>
+          <% end %>
+        <% end %>
+      </div>
+      <%= link_to @post.user.first_name, user_path(@post.user), class: 'username' %>
+    </div>
+    <div class="description">
+      <%= @post.caption %>
+    </div>
+    <div>Rating</div>
+    <div class="average-review-rating" data-score=<%= @review_average %>></div>
+  </div>
+</div>
+
+<div class="delete">
+  <% if current_user.posts.exists?(@post.id) %>
+    <%= button_to 'Remove', post_path(@post), method: :delete %>
+  <% end %>
+</div>
+<%= @post.reviews.count %>
+<p class="review-comment">
+  <% @post.reviews.each do |review| %>
+    <%= review.user.first_name %>
+    <div class="review-rating" data-score="<%= review.rating %>"></div>
+    <%= review.comment %>
+    <% if review.user_id == current_user.id %>
+      <%= link_to "Edit", edit_post_review_path(review.post, review) %>
+      <%= button_to "Delete", post_review_path(review.post, review), method: :delete %>
+    <% end %>
+  <% end %>
+</p>
+<div>
+<% unless current_user == @post.user %>
+  <%= link_to "Add review", new_post_review_path(@post) %>
+<% end %>
+</div>
+
+<script>
+	$('.review-rating').raty({
+		readOnly: true,
+		score: function() {
+			return $(this).attr('data-score');
+		},
+		path: '/assets/'
+	});
+</script>
+
+<script>
+	$('.average-review-rating').raty({
+		readOnly: true,
+		path: '/assets/',
+		score: function() {
+			return $(this).attr('data-score')
+		}
+	});
+</script>

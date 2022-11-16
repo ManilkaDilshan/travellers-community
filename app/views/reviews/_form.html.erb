@@ -1,0 +1,14 @@
+<%= form_for([@post, @post.reviews.build]) do |f| %>
+  <div id="rating-form">
+		<label>Rating</label>
+	</div>
+  <%= f.text_field :comment %>
+  <%= f.submit "Post Comment", disable_with: 'Submiting...' %>
+<% end %>
+
+<script>
+	$('#rating-form').raty({
+		path: '/assets/',
+		scoreName: 'review[rating]'
+	});
+</script>

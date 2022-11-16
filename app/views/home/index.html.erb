@@ -1,0 +1,54 @@
+<%= form_for Post.new do |f| %>
+  <div class="form-group">
+    <%= f.text_field :caption %>
+  </div>
+  <div class="form-group">
+    <%= f.text_field :location %>
+  </div>
+  <div class="form-group">
+    <%= f.date_field :visited_date %>
+  </div>
+  <div class="form-group">
+    <%= f.file_field :image %>
+  </div>
+  <div class="form-group">
+    <%= f.text_field :user_id, value: current_user.id, class:'d-none'%>
+  </div>
+  <br>
+  <div class="text-center">
+    <%= f.submit 'Create Post', class: 'btn btn-primary' %>
+  </div>
+<% end %>
+
+<div>
+  <%= form_tag(root_path, method: :get) do %>
+    <%= text_field_tag :search, params[:search] %>
+    <%= submit_tag "Search" %>
+  <% end %>
+</div>
+
+<div class="posts">
+  <% @posts.each do |post| %>
+    <% if current_user.followees.include?(post.user) %>
+      <section class="post">
+        <div class="user">
+          <div class="avatar">
+            <% if post.user.avatar.attached? %>
+              <%= link_to user_path(post.user) do %>
+                <%= image_tag post.user.avatar %>
+              <% end %>
+            <% end %>
+          </div>
+          <div class="username">
+            <%= post.user.first_name %> <%= post.user.last_name %>
+          </div>
+        </div>
+        <div class="description">
+          <%= post.caption %>
+          <%= post.visited_date %>
+        </div>
+        <%= image_tag post.image, class: 'main-image' %>
+      </section>
+    <% end %>
+  <% end %>
+</div>

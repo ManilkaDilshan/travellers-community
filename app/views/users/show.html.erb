@@ -1,0 +1,67 @@
+<div class="user-profile">
+  <div class="profile row">
+    <div class="col-md-4 avatar">
+      <div class="wrapper">
+        <% if @user.avatar.attached? %>
+          <%= image_tag @user.avatar %>
+        <%end %>
+      </div>
+    </div>
+    
+    <div class="col-md-8 basic-info">
+      <div class="user-wrapper">
+        <h2 class="username"><%= @user.first_name %> <%= current_user.last_name %></h2>
+        <% if current_user == @user %>
+        <a class="edit-profile" href="<%= edit_user_path(current_user) %>">
+          <button>Edit Profile</button>
+        </a>
+        <% end %>
+      </div>
+      <ul class="posts">
+        <li><span><%= @posts.count %></span> posts</li>
+        <li><span><%= current_user.followers.count %></span> followers</li>
+        <li><span><%= current_user.followees.count %></span> following</li>
+      </ul>
+      <h2 class="name"><%= @user.first_name %> <%= current_user.last_name %></h2>
+      <%=link_to @user.email, current_user.email, class:  'website' %>
+    </div>
+  </div>
+</div>
+
+<div class="user-images">
+  <% @posts.each do |post| %>
+    <section class="post">
+  <div class="user">
+    <div class="avatar">
+      <% if post.user.avatar.attached? %>
+        <%= link_to user_path(post.user) do %>
+          <%= image_tag post.user.avatar %>
+        <% end %>
+      <% end %>
+    </div>
+    <div class="username">
+      <%= post.user.first_name %> <%= post.user.last_name %>
+    </div>
+  </div>
+  <div class="description">
+    <%= post.caption %>
+  </div>
+  <div class="wrapper">
+      <%=link_to post_path(post) do %>
+        <%=image_tag post.image %>
+      <% end %>
+    </div>
+</section>
+  <% end %>
+</div>
+
+<section id="all-links">
+    <% unless @user.id == current_user.id %>
+      <% if current_user.followees.include?(@user) %>
+        <h5><%= button_to "Unfollow", unfollow_user_path, method: "POST" %></h5>
+      <% else %>
+        <h5><%= button_to "Follow", follow_user_path, method: "POST"  %></h5>
+      <% end%>
+    <% end %> 
+    <br>
+</section>

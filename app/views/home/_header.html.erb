@@ -1,0 +1,23 @@
+<nav class="navbar navbar-light bg-light d-flex">
+      <div class="container">
+        <div class="logo">
+          <a class="navbar-brand" href="#">
+            <%= fa_stacked_icon "globe inverse", base: "circle"%>
+            Travellers Community
+          </a>
+        </div>
+        <div class="user-section">
+          <%= current_user.email if user_signed_in? %>
+          <% if user_signed_in? %>
+            <a href="<%= user_path(current_user)%>">
+              <i class="fa fa-user"></i>
+            </a>
+            <%= button_to fa_icon("sign-out"), destroy_user_session_path, method: :delete %>
+          <% else %>
+            <a href="<%= new_user_session_path%>">
+              <i class="fa fa-sign-in"></i>
+            </a>
+          <% end %>
+        </div>
+      </div>
+    </nav>
